@@ -449,8 +449,11 @@ a img{ border: none }
 #adobe{
 	float: left;
 }
+#export .copy h3{
+	margin-bottom: 3px;
+}
 #export .copy input{
-	margin-top: 5px;
+	margin-top: 2px;
 }
 #copy-json{ float: left; }
 #copy-css{ float: left; }

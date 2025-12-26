@@ -552,18 +552,15 @@ function saveSettingsToFile() {
 	try {
 		var settings = getSettings();
 		var json = JSON.stringify(settings, null, 2);
-		var blob = new Blob([json], { type: 'application/json' });
-		var url = URL.createObjectURL(blob);
-		var a = document.createElement('a');
-		a.href = url;
-		var timestamp = new Date().toISOString().replace(/[:.]/g, '-').substring(0, 19);
-		a.download = 'colorbrewer-settings-' + timestamp + '.json';
-		document.body.appendChild(a);
-		a.click();
-		document.body.removeChild(a);
-		URL.revokeObjectURL(url);
+		var fileName = "colorbrewer_settings.json";
 
-		console.log("Settings saved successfully");
+		// FileSaver.jsを使用して保存
+		// saveAs(Blob/File, filename) はブラウザ間の差異を吸収して確実に保存ダイアログ/ダウンロードを実行する
+		// application/octet-stream を指定して、ブラウザによるコンテンツ解釈を回避し、強制的にダウンロードさせる
+		var blob = new Blob([json], { type: "application/octet-stream;charset=utf-8" });
+		saveAs(blob, fileName);
+
+		console.log("Settings saved to file: " + fileName + " (v2-octet-stream)");
 	} catch (error) {
 		console.error("Error saving settings:", error);
 		alert("設定の保存中にエラーが発生しました: " + error.message);
@@ -772,37 +769,37 @@ $(document).ready(function () {
 		$(this).val('');
 	});
 
-	// 自動保存トグル
-	$("#auto-save-toggle").change(function () {
-		toggleAutoSave();
-	});
+	// 自動保存トグル（機能削除のためコメントアウト）
+	// $("#auto-save-toggle").change(function () {
+	// 	toggleAutoSave();
+	// });
 
-	// 復元ボタン
-	$("#restore-settings-btn").click(function (e) {
-		e.preventDefault();
-		var saved = loadSettingsFromLocalStorage();
-		if (saved) {
-			var timestamp = saved.timestamp ? new Date(saved.timestamp).toLocaleString('ja-JP') : '不明';
-			if (confirm("前回の設定を復元しますか？\n\n保存日時: " + timestamp)) {
-				applySettings(saved);
-				alert("設定を復元しました");
-			}
-		} else {
-			alert("保存された設定が見つかりません");
-		}
-	});
+	// 復元ボタン（機能削除のためコメントアウト）
+	// $("#restore-settings-btn").click(function (e) {
+	// 	e.preventDefault();
+	// 	var saved = loadSettingsFromLocalStorage();
+	// 	if (saved) {
+	// 		var timestamp = saved.timestamp ? new Date(saved.timestamp).toLocaleString('ja-JP') : '不明';
+	// 		if (confirm("前回の設定を復元しますか？\n\n保存日時: " + timestamp)) {
+	// 			applySettings(saved);
+	// 			alert("設定を復元しました");
+	// 		}
+	// 	} else {
+	// 		alert("保存された設定が見つかりません");
+	// 	}
+	// });
 
-	// 自動保存の初期状態を復元
-	var autoSaveEnabled = localStorage.getItem('colorbrewer-autosave-enabled') === 'true';
-	$("#auto-save-toggle").prop("checked", autoSaveEnabled);
+	// 自動保存の初期状態を復元（機能削除のためコメントアウト）
+	// var autoSaveEnabled = localStorage.getItem('colorbrewer-autosave-enabled') === 'true';
+	// $("#auto-save-toggle").prop("checked", autoSaveEnabled);
 
-	// 各種設定変更時に自動保存をトリガー
-	$("#num-classes, .scheme-type, #color-system").change(triggerAutoSave);
-	$("#filters input, #layers input").change(triggerAutoSave);
-	$("#terrain, #solid-color").change(triggerAutoSave);
-	$("#transparency-slider").mouseup(triggerAutoSave);
-	$(".ramp").click(triggerAutoSave);
+	// 各種設定変更時に自動保存をトリガー（機能削除のためコメントアウト）
+	// $("#num-classes, .scheme-type, #color-system").change(triggerAutoSave);
+	// $("#filters input, #layers input").change(triggerAutoSave);
+	// $("#terrain, #solid-color").change(triggerAutoSave);
+	// $("#transparency-slider").mouseup(triggerAutoSave);
+	// $(".ramp").click(triggerAutoSave);
 
-	// Spectrum カラーピッカーの変更時
-	$("#road-color, #city-color, #border-color, #bg-color").on("change.spectrum", triggerAutoSave);
+	// Spectrum カラーピッカーの変更時（機能削除のためコメントアウト）
+	// $("#road-color, #city-color, #border-color, #bg-color").on("change.spectrum", triggerAutoSave);
 });

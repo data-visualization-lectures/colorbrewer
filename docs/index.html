@@ -26,6 +26,7 @@
 	<script src="lib/jquery.svgdom.min.js" type="text/javascript"></script>
 	<script type="text/javascript" src="lib/spectrum.min.js"></script>
 	<script type="text/javascript" src="cmyk.js"></script>
+	<script type="text/javascript" src="lib/FileSaver.min.js"></script>
 	<script type="text/javascript">
 
 		var _gaq = _gaq || [];
@@ -172,22 +173,12 @@
 					<input type="text" id="css-output" value="CSS!" readonly />
 				</div>
 				<div id="settings-export">
-					<h3>設定の保存・読み込み</h3>
+					<h3>設定の保存・読込</h3>
 					<p>現在の全ての設定をJSONファイルとして保存できます</p>
-					<p><button id="save-settings-btn" class="settings-btn">設定をダウンロード (JSON)</button></p>
+					<p><button id="save-settings-btn" class="settings-btn">設定の保存</button></p>
 					<p>
 						<input type="file" id="load-settings-input" accept=".json" style="display:none" />
-						<button id="load-settings-btn" class="settings-btn">設定を読み込み</button>
-					</p>
-					<p>
-						<label for="auto-save-toggle">
-							<input type="checkbox" id="auto-save-toggle" />
-							自動保存 (ブラウザに保存)
-						</label>
-					</p>
-					<p style="font-size: 11px; color: #666;">
-						<button id="restore-settings-btn" class="settings-btn"
-							style="font-size: 11px;">前回の設定を復元</button>
+						<button id="load-settings-btn" class="settings-btn">設定の読込</button>
 					</p>
 				</div>
 			</div> <!--end selected-data div-->
@@ -212,7 +203,7 @@
 	</div>
 	<script src="supabase.js"></script>
 	<script src="dataviz-auth-client.js"></script>
-	<script src="colorbrewer.js"></script>
+	<script src="colorbrewer.js?v=force_fix_007"></script>
 </body>
 
 </html>
