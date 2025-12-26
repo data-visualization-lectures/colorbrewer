@@ -864,11 +864,11 @@ async function handleCloudSave() {
 
 				await cloudClient.createProject(name, settings, thumbnail);
 
-				alert("保存しました！");
+				showToast("保存しました！", "success");
 				closeCloudDialog();
 			} catch (e) {
 				console.error(e);
-				alert("保存に失敗しました: " + e.message);
+				showToast("保存に失敗しました: " + e.message, "error");
 				$(this).text("保存を実行").prop("disabled", false);
 			}
 		});
@@ -940,10 +940,10 @@ async function handleCloudLoad() {
 			try {
 				var projectData = await cloudClient.getProjectData(id);
 				applySettings(projectData);
-				alert("読み込みました");
+				showToast("読み込みました", "success");
 				closeCloudDialog();
 			} catch (e) {
-				alert("読み込みエラー: " + e.message);
+				showToast("読み込みエラー: " + e.message, "error");
 			}
 		});
 
@@ -955,7 +955,7 @@ async function handleCloudLoad() {
 				await cloudClient.deleteProject(id);
 				$(this).closest(".project-item").remove();
 			} catch (e) {
-				alert("削除エラー: " + e.message);
+				showToast("削除エラー: " + e.message, "error");
 			}
 		});
 
@@ -1010,4 +1010,14 @@ async function generateThumbnail() {
 			resolve(null);
 		}
 	});
+}
+
+function showToast(message, type) {
+	var toast = $('<div class="toast ' + (type || '') + '">' + message + '</div>');
+	$("#toast-container").append(toast);
+	setTimeout(function () { toast.addClass("show"); }, 10);
+	setTimeout(function () {
+		toast.removeClass("show");
+		setTimeout(function () { toast.remove(); }, 300);
+	}, 3000);
 }
