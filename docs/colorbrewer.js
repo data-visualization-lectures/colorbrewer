@@ -802,4 +802,213 @@ $(document).ready(function () {
 
 	// Spectrum カラーピッカーの変更時（機能削除のためコメントアウト）
 	// $("#road-color, #city-color, #border-color, #bg-color").on("change.spectrum", triggerAutoSave);
+
+	// クラウド保存・読込
+	$("#save-cloud-btn").click(function (e) {
+		e.preventDefault();
+		handleCloudSave();
+	});
+	$("#load-cloud-btn").click(function (e) {
+		e.preventDefault();
+		handleCloudLoad();
+	});
+	$("#cloud-dialog-close").click(function () {
+		closeCloudDialog();
+	});
 });
+
+// ========================================
+// Cloud Storage Functions
+// ========================================
+var cloudClient = new DatavizApiClient();
+
+function showCloudDialog(title, content) {
+	$("#cloud-dialog-title").text(title);
+	$("#cloud-dialog-content").html(content);
+	$("#mask").show();
+	$("#cloud-dialog").show();
+}
+
+function closeCloudDialog() {
+	$("#cloud-dialog").hide();
+	$("#mask").hide();
+	$("#cloud-dialog-content").empty();
+}
+
+async function handleCloudSave() {
+	try {
+		var session = await cloudClient.getSession();
+		if (!session) {
+			alert("クラウド機能を使用するにはログインが必要です。");
+			return;
+		}
+
+		var currentName = "My Color Scheme";
+		var formHtml =
+			'<div style="padding:10px;">' +
+			'<p>プロジェクト名を入力してください:</p>' +
+			'<input type="text" id="cloud-project-name" value="' + currentName + '" style="width:100%; padding:5px; box-sizing:border-box;" />' +
+			'<button id="cloud-execute-save" class="settings-btn" style="width:100%; margin-top:10px;">保存を実行</button>' +
+			'</div>';
+		showCloudDialog("クラウドに保存", formHtml);
+
+		$("#cloud-execute-save").click(async function () {
+			try {
+				var name = $("#cloud-project-name").val();
+				if (!name) return alert("名前を入力してください");
+
+				$(this).text("保存中...").prop("disabled", true);
+
+				var settings = getSettings();
+				var thumbnail = await generateThumbnail();
+
+				await cloudClient.createProject(name, settings, thumbnail);
+
+				alert("保存しました！");
+				closeCloudDialog();
+			} catch (e) {
+				console.error(e);
+				alert("保存に失敗しました: " + e.message);
+				$(this).text("保存を実行").prop("disabled", false);
+			}
+		});
+
+	} catch (e) {
+		alert("エラー: " + e.message);
+	}
+}
+
+async function handleCloudLoad() {
+	try {
+		var session = await cloudClient.getSession();
+		if (!session) {
+			alert("クラウド機能を使用するにはログインが必要です。");
+			return;
+		}
+
+		$("#cloud-dialog-content").html("プロジェクト一覧を取得中...");
+		showCloudDialog("クラウドから読込", "");
+
+		var projects = await cloudClient.listProjects();
+
+		if (!projects || projects.length === 0) {
+			$("#cloud-dialog-content").html("<p style='padding:10px;'>保存されたプロジェクトはありません。</p>");
+			return;
+		}
+
+		var listHtml = '<div style="display:flex; flex-direction:column; gap:10px;">';
+		projects.forEach(function (p) {
+			var dateStr = new Date(p.updated_at).toLocaleString('ja-JP');
+			listHtml +=
+				'<div class="project-item" style="border:1px solid #ddd; padding:10px; display:flex; gap:10px; align-items:center;">' +
+				'<div class="thumb-container" data-id="' + p.id + '" style="width:80px; height:60px; background:#eee; display:flex; align-items:center; justify-content:center; overflow:hidden;">' +
+				'<span style="font-size:10px; color:#999;">Loading...</span>' +
+				'</div>' +
+				'<div style="flex:1;">' +
+				'<div style="font-weight:bold;">' + p.name + '</div>' +
+				'<div style="font-size:12px; color:#666;">' + dateStr + '</div>' +
+				'</div>' +
+				'<button class="settings-btn load-execute-btn" data-id="' + p.id + '">読込</button>' +
+				'<button class="settings-btn delete-execute-btn" data-id="' + p.id + '" style="background:#fdd;">削除</button>' +
+				'</div>';
+		});
+		listHtml += '</div>';
+
+		$("#cloud-dialog-content").html(listHtml);
+
+		// サムネイル読み込み
+		projects.forEach(function (p) {
+			if (p.thumbnail_path) {
+				cloudClient.fetchAuthenticated("/api/projects/" + p.id + "/thumbnail", { method: "GET" })
+					.then(function (res) { return res.blob(); })
+					.then(function (blob) {
+						var url = URL.createObjectURL(blob);
+						$(".thumb-container[data-id='" + p.id + "']").html('<img src="' + url + '" style="width:100%; height:auto;" />');
+					})
+					.catch(function () {
+						$(".thumb-container[data-id='" + p.id + "']").html('<span style="font-size:10px; color:#f00;">Error</span>');
+					});
+			} else {
+				$(".thumb-container[data-id='" + p.id + "']").html('<span style="font-size:10px; color:#ccc;">No Image</span>');
+			}
+		});
+
+		$(".load-execute-btn").click(async function (e) {
+			e.stopPropagation();
+			var id = $(this).data("id");
+			if (!confirm("現在の設定を上書きして読み込みますか？")) return;
+
+			try {
+				var projectData = await cloudClient.getProjectData(id);
+				applySettings(projectData);
+				alert("読み込みました");
+				closeCloudDialog();
+			} catch (e) {
+				alert("読み込みエラー: " + e.message);
+			}
+		});
+
+		$(".delete-execute-btn").click(async function (e) {
+			e.stopPropagation();
+			if (!confirm("本当に削除しますか？")) return;
+			var id = $(this).data("id");
+			try {
+				await cloudClient.deleteProject(id);
+				$(this).closest(".project-item").remove();
+			} catch (e) {
+				alert("削除エラー: " + e.message);
+			}
+		});
+
+	} catch (e) {
+		$("#cloud-dialog-content").text("エラー: " + e.message);
+	}
+}
+
+async function generateThumbnail() {
+	return new Promise(function (resolve) {
+		try {
+			var svg = document.getElementById("county-map");
+			if (!svg) { resolve(null); return; }
+
+			var serializer = new XMLSerializer();
+			var svgString = serializer.serializeToString(svg);
+
+			var canvas = document.createElement("canvas");
+			canvas.width = 756;
+			canvas.height = 581;
+			var ctx = canvas.getContext("2d");
+
+			ctx.fillStyle = "#ffffff";
+			ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+			var img = new Image();
+			var svgBlob = new Blob([svgString], { type: "image/svg+xml;charset=utf-8" });
+			// URL生成 (webkitURL 対応など古いブラウザ考慮は不要、最新前提)
+			var url = URL.createObjectURL(svgBlob);
+
+			img.onload = function () {
+				ctx.drawImage(img, 0, 0);
+				URL.revokeObjectURL(url);
+				try {
+					var dataUrl = canvas.toDataURL("image/png");
+					resolve(dataUrl);
+				} catch (e) {
+					console.error("Canvas toDataURL failed", e);
+					resolve(null);
+				}
+			};
+
+			img.onerror = function (e) {
+				console.error("Thumbnail generation failed:", e);
+				resolve(null);
+			};
+
+			img.src = url;
+
+		} catch (e) {
+			console.error("Thumbnail error:", e);
+			resolve(null);
+		}
+	});
+}

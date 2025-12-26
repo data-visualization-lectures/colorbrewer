@@ -176,10 +176,13 @@
 					<h3>設定の保存・読込</h3>
 					<p>現在の全ての設定をJSONファイルとして保存できます</p>
 					<p><button id="save-settings-btn" class="settings-btn">設定の保存</button></p>
-					<p>
-						<input type="file" id="load-settings-input" accept=".json" style="display:none" />
-						<button id="load-settings-btn" class="settings-btn">設定の読込</button>
+					<input type="file" id="load-settings-input" accept=".json" style="display:none" />
+					<button id="load-settings-btn" class="settings-btn">設定の読込</button>
 					</p>
+					<div id="cloud-actions" style="margin-top:10px; border-top:1px dashed #ccc; padding-top:10px;">
+						<p><button id="save-cloud-btn" class="settings-btn" style="width:100%">クラウドに保存</button></p>
+						<p><button id="load-cloud-btn" class="settings-btn" style="width:100%">クラウドから読込</button></p>
+					</div>
 				</div>
 			</div> <!--end selected-data div-->
 
@@ -201,9 +204,21 @@
 		<p id="learnmore-title">MUGGIN'</p>
 		<div id="content"></div>
 	</div>
+
+	<!-- Cloud Storage Modal -->
+	<div id="cloud-dialog"
+		style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); width:600px; background:#fff; z-index:10001; padding:20px; box-shadow:0 4px 15px rgba(0,0,0,0.5); border-radius:5px;">
+		<h2 id="cloud-dialog-title" style="margin-top:0; border-bottom:1px solid #ccc; padding-bottom:10px;">クラウド保存</h2>
+		<div id="cloud-dialog-content" style="max-height:400px; overflow-y:auto; margin:15px 0;"></div>
+		<div style="text-align:right; border-top:1px solid #ccc; padding-top:10px;">
+			<button id="cloud-dialog-close" class="settings-btn">キャンセル</button>
+		</div>
+	</div>
+
 	<script src="supabase.js"></script>
 	<script src="dataviz-auth-client.js"></script>
-	<script src="colorbrewer.js?v=force_fix_007"></script>
+	<script src="dataviz-api-client.js"></script>
+	<script src="colorbrewer.js?v=force_fix_008"></script>
 </body>
 
 </html>
