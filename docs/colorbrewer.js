@@ -843,7 +843,13 @@ async function handleCloudSave() {
 			return;
 		}
 
-		var currentName = "My Color Scheme";
+		var now = new Date();
+		// YYYY-MM-DD HH:mm 形式
+		var currentName = now.getFullYear() + "-" +
+			("0" + (now.getMonth() + 1)).slice(-2) + "-" +
+			("0" + now.getDate()).slice(-2) + " " +
+			("0" + now.getHours()).slice(-2) + ":" +
+			("0" + now.getMinutes()).slice(-2);
 		var formHtml =
 			'<div style="padding:10px;">' +
 			'<p>プロジェクト名を入力してください:</p>' +
