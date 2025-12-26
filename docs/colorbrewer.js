@@ -919,8 +919,7 @@ async function handleCloudLoad() {
 		// サムネイル読み込み
 		projects.forEach(function (p) {
 			if (p.thumbnail_path) {
-				cloudClient.fetchAuthenticated("/api/projects/" + p.id + "/thumbnail", { method: "GET" })
-					.then(function (res) { return res.blob(); })
+				cloudClient.getThumbnailBlob(p.id)
 					.then(function (blob) {
 						var url = URL.createObjectURL(blob);
 						$(".thumb-container[data-id='" + p.id + "']").html('<img src="' + url + '" style="width:100%; height:auto;" />');

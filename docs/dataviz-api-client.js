@@ -88,4 +88,20 @@ class DatavizApiClient {
             method: "DELETE"
         });
     }
+
+    async getThumbnailBlob(id) {
+        const session = await this.getSession();
+        if (!session) throw new Error("Login required");
+
+        const res = await fetch(`${API_BASE_URL}/api/projects/${id}/thumbnail`, {
+            headers: {
+                "Authorization": `Bearer ${session.access_token}`
+            }
+        });
+
+        if (!res.ok) {
+            throw new Error(`Thumbnail error: ${res.status}`);
+        }
+        return res.blob();
+    }
 }
