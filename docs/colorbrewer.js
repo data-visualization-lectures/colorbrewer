@@ -399,12 +399,12 @@ $(".learn-more, #how, #credits, #downloads").click(function (e) {
 	var page;
 	switch ($(this).attr("id")) {
 		case "number-learn-more":
-			$("#learnmore-title").html("NUMBER OF DATA CLASSES");
+			$("#learnmore-title").html("データ階級数について");
 			page = "number.html";
 			break;
 
 		case "schemes-learn-more":
-			$("#learnmore-title").html("TYPES OF COLOR SCHEMES");
+			$("#learnmore-title").html("カラー配色タイプについて");
 			page = "schemes.html";
 			break;
 
