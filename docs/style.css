@@ -507,3 +507,54 @@ a:hover{ text-decoration: underline; }
 #road-lines{ fill: none; stroke: #f33; stroke-width: 1.5px; }
 #county-map{ fill: #999; }
 #county-map g{ stroke: #000; stroke-width: .50px; }
+
+/* Settings Management Styles */
+#settings-export {
+	float: left;
+	width: 250px;
+	margin-top: 10px;
+	padding-top: 10px;
+	border-top: 2px solid #ff7200;
+}
+
+#settings-export h3 {
+	color: #ff7200;
+}
+
+#settings-export p {
+	font-size: 11px;
+	line-height: 14px;
+}
+
+.settings-btn {
+	background-color: #ff7200;
+	color: white;
+	border: none;
+	padding: 8px 12px;
+	font-size: 12px;
+	font-family: 'Droid Sans', sans-serif;
+	cursor: pointer;
+	border-radius: 3px;
+	width: 220px;
+	transition: background-color 0.2s;
+}
+
+.settings-btn:hover {
+	background-color: #e66600;
+}
+
+.settings-btn:active {
+	background-color: #cc5500;
+}
+
+#settings-export label {
+	font-size: 11px;
+	cursor: pointer;
+	display: block;
+	margin-left: 10px;
+}
+
+#settings-export input[type="checkbox"] {
+	cursor: pointer;
+	margin-right: 5px;
+}
