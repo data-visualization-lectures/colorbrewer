@@ -839,7 +839,7 @@ async function handleCloudSave() {
 	try {
 		var session = await cloudClient.getSession();
 		if (!session) {
-			alert("クラウド機能を使用するにはログインが必要です。");
+			alert("サーバ機能を使用するにはログインが必要です。");
 			return;
 		}
 
@@ -850,7 +850,7 @@ async function handleCloudSave() {
 			'<input type="text" id="cloud-project-name" value="' + currentName + '" style="width:100%; padding:5px; box-sizing:border-box;" />' +
 			'<button id="cloud-execute-save" class="settings-btn" style="width:100%; margin-top:10px;">保存を実行</button>' +
 			'</div>';
-		showCloudDialog("クラウドに保存", formHtml);
+		showCloudDialog("サーバに保存", formHtml);
 
 		$("#cloud-execute-save").click(async function () {
 			try {
@@ -882,12 +882,12 @@ async function handleCloudLoad() {
 	try {
 		var session = await cloudClient.getSession();
 		if (!session) {
-			alert("クラウド機能を使用するにはログインが必要です。");
+			alert("サーバ機能を使用するにはログインが必要です。");
 			return;
 		}
 
 		$("#cloud-dialog-content").html("プロジェクト一覧を取得中...");
-		showCloudDialog("クラウドから読込", "");
+		showCloudDialog("サーバから読込", "");
 
 		var projects = await cloudClient.listProjects();
 
