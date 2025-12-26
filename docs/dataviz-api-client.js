@@ -1,5 +1,5 @@
-const API_BASE_URL = "https://api.dataviz.jp";
-const APP_NAME = "colorbrewer";
+// API_BASE_URL は dataviz-auth-client.js で定義済みのため削除
+const DATAVIZ_APP_NAME = "colorbrewer";
 
 class DatavizApiClient {
     constructor() { }
@@ -49,7 +49,7 @@ class DatavizApiClient {
     }
 
     async listProjects() {
-        const res = await this.fetchAuthenticated(`/api/projects?app=${APP_NAME}`);
+        const res = await this.fetchAuthenticated(`/api/projects?app=${DATAVIZ_APP_NAME}`);
         return res.projects;
     }
 
@@ -61,7 +61,7 @@ class DatavizApiClient {
     async createProject(name, data, thumbnail) {
         const body = {
             name: name,
-            app_name: APP_NAME,
+            app_name: DATAVIZ_APP_NAME,
             data: data,
             thumbnail: thumbnail // Base64 Data URI
         };
