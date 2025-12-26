@@ -35,12 +35,19 @@ a img{ border: none }
 	width: 756px;
 	border-right: 1px solid #999;
 	border-left: 1px solid #999;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 0 20px;
+	box-sizing: border-box;
 }
 #header h1{
 	color: white;
-	margin: 0 0 0 20px;
+	margin: 0;
 	letter-spacing: .2em;
 	text-align: left;
+	font-size: 24px;
+	line-height: 1;
 }
 
 #header h1 span{
@@ -48,13 +55,15 @@ a img{ border: none }
 }
 
 #header h3 {
-	margin: 0 0 0 20px;
+	margin: 0;
 	color: #999;
 	text-align: left;
+	font-size: 13px;
+	line-height: 1;
 }
 
 #header p {
-	margin: 5px 5px 0 0;
+	margin: 0;
 	text-align: right;
 }
 #header p a{
