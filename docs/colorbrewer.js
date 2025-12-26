@@ -409,7 +409,7 @@ $(".learn-more, #how, #credits, #downloads").click(function (e) {
 			break;
 
 		case "filters-learn-more":
-			$("#learnmore-title").html("USABILITY ICONS");
+			$("#learnmore-title").html("ユーザビリティアイコンについて");
 			page = "usability.html";
 			break;
 
@@ -429,7 +429,7 @@ $(".learn-more, #how, #credits, #downloads").click(function (e) {
 			break;
 
 		case "context-learn-more":
-			$("#learnmore-title").html("MAP CONTEXT and BACKGROUND");
+			$("#learnmore-title").html("地図のコンテキストと背景について");
 			page = "context.html";
 			break;
 	}
