@@ -5,8 +5,8 @@ class DatavizApiClient {
     constructor() { }
 
     async getSession() {
-        if (!window.supabase) return null;
-        const { data } = await window.supabase.auth.getSession();
+        if (!window.datavizSupabase) return null;
+        const { data } = await window.datavizSupabase.auth.getSession();
         return data.session;
     }
 
