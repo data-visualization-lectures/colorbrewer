@@ -1,4 +1,4 @@
-// API_BASE_URL は dataviz-auth-client.js で定義済みのため削除
+// window.datavizApiUrl は dataviz-auth-client.js で定義済みのため削除
 const DATAVIZ_APP_NAME = "colorbrewer";
 
 class DatavizApiClient {
@@ -23,7 +23,7 @@ class DatavizApiClient {
         };
 
         try {
-            const res = await fetch(API_BASE_URL + url, {
+            const res = await fetch(window.datavizApiUrl + url, {
                 ...options,
                 headers
             });
@@ -93,7 +93,7 @@ class DatavizApiClient {
         const session = await this.getSession();
         if (!session) throw new Error("Login required");
 
-        const res = await fetch(`${API_BASE_URL}/api/projects/${id}/thumbnail`, {
+        const res = await fetch(`${window.datavizApiUrl}/api/projects/${id}/thumbnail`, {
             headers: {
                 "Authorization": `Bearer ${session.access_token}`
             }
