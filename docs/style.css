@@ -1,6 +1,7 @@
 html,body{
 	width: 100%;
 	margin: 0;
+	padding-top: 48px; /* dataviz-header の高さ分 */
 	font: 13px/18px 'Droid Sans', sans-serif;
 	color: #666;
 	background-color: #eee;
