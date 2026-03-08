@@ -360,7 +360,7 @@ a img{ border: none }
 	position: absolute;
 	left: 0;
 	top: 375px;
-	height: 380px;
+	height: auto;
 	width: 265px;
 	background-color: white;
 	border: 1px solid #999;
@@ -421,7 +421,6 @@ a img{ border: none }
 
 #selected-data{
 	width: 100%;
-	height: 100%;
 }
 #selected-data h2{
 	position: absolute;
