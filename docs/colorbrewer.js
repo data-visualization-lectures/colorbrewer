@@ -130,9 +130,9 @@ function showSchemes() {
 	}
 	if (selectedSchemeType == "sequential") {
 		$("#scheme1").css("width", "160px");
-		$("#multi").show().text("Multi-hue:");
+		$("#multi").show().text(t('map.multiHue'));
 		$("#scheme2").css("width", "90px");
-		$("#single").show().text("Single hue:");
+		$("#single").show().text(t('map.singleHue'));
 
 		$("#singlehue").empty().css("display", "inline-block");
 		for (i in schemeNames.singlehue) {
@@ -171,7 +171,7 @@ function clearSchemes() {
 	$("#scheme-name").html("");
 	$(".score-icon").hide();
 	$("#color-system").hide();
-	$("#ramps").append("<p>No color schemes match these criteria.</p><p>Please choose fewer data classes, a different data type, and/or fewer filtering options.</p>");
+	$("#ramps").append("<p>" + t('map.noMatch') + "</p><p>" + t('map.noMatchAdvice') + "</p>");
 }
 
 function setScheme(s) {
@@ -179,7 +179,7 @@ function setScheme(s) {
 	$(".ramp.selected").removeClass("selected");
 	selectedScheme = s;
 	$(".ramp." + selectedScheme).addClass("selected");
-	$("#scheme-name").html(numClasses + "-class " + selectedScheme);
+	$("#scheme-name").html(t('map.schemeClass', { numClasses: numClasses, scheme: selectedScheme }));
 	applyColors();
 	drawColorChips();
 	window.location.hash = "type=" + selectedSchemeType + "&scheme=" + selectedScheme + "&n=" + numClasses;
@@ -195,18 +195,18 @@ function setScheme(s) {
 
 	$(".score-icon").attr("class", "score-icon");
 	var f = checkColorblind(s);
-	$("#blind-icon").addClass(!f ? "bad" : (f == 1 ? "ok" : "maybe")).attr("title", numClasses + "-class " + selectedScheme + " is " + getWord(f) + "color blind friendly");
+	$("#blind-icon").addClass(!f ? "bad" : (f == 1 ? "ok" : "maybe")).attr("title", t('map.blindFriendly', { numClasses: numClasses, scheme: selectedScheme, word: getWord(f) }));
 	f = checkCopy(s);
-	$("#copy-icon").addClass(!f ? "bad" : (f == 1 ? "ok" : "maybe")).attr("title", numClasses + "-class " + selectedScheme + " is " + getWord(f) + "photocopy friendly");
+	$("#copy-icon").addClass(!f ? "bad" : (f == 1 ? "ok" : "maybe")).attr("title", t('map.copyFriendly', { numClasses: numClasses, scheme: selectedScheme, word: getWord(f) }));
 	f = checkScreen(s);
-	$("#screen-icon").addClass(!f ? "bad" : (f == 1 ? "ok" : "maybe")).attr("title", numClasses + "-class " + selectedScheme + " is " + getWord(f) + "LCD friendly");
+	$("#screen-icon").addClass(!f ? "bad" : (f == 1 ? "ok" : "maybe")).attr("title", t('map.screenFriendly', { numClasses: numClasses, scheme: selectedScheme, word: getWord(f) }));
 	f = checkPrint(s);
-	$("#print-icon").addClass(!f ? "bad" : (f == 1 ? "ok" : "maybe")).attr("title", numClasses + "-class " + selectedScheme + " is " + getWord(f) + "print friendly");
+	$("#print-icon").addClass(!f ? "bad" : (f == 1 ? "ok" : "maybe")).attr("title", t('map.printFriendly', { numClasses: numClasses, scheme: selectedScheme, word: getWord(f) }));
 
 	function getWord(w) {
-		if (!w) return "not ";
-		if (w == 1) return "";
-		if (w == 2) return "possibly not ";
+		if (!w) return t('map.friendlyNo');
+		if (w == 1) return t('map.friendlyYes');
+		if (w == 2) return t('map.friendlyMaybe');
 	}
 }
 
@@ -398,42 +398,43 @@ $(".learn-more, #how, #credits, #downloads").click(function (e) {
 	var page;
 	switch ($(this).attr("id")) {
 		case "number-learn-more":
-			$("#learnmore-title").html("データ階級数について");
+			$("#learnmore-title").html(t('dialog.number'));
 			page = "number.html";
 			break;
 
 		case "schemes-learn-more":
-			$("#learnmore-title").html("カラー配色タイプについて");
+			$("#learnmore-title").html(t('dialog.schemes'));
 			page = "schemes.html";
 			break;
 
 		case "filters-learn-more":
-			$("#learnmore-title").html("ユーザビリティアイコンについて");
+			$("#learnmore-title").html(t('dialog.usability'));
 			page = "usability.html";
 			break;
 
 		case "how":
-			$("#learnmore-title").html("HOW TO USE: MAP DIAGNOSTICS");
+			$("#learnmore-title").html(t('dialog.howto'));
 			page = "howtouse.html";
 			break;
 
 		case "credits":
-			$("#learnmore-title").html("CREDITS");
+			$("#learnmore-title").html(t('dialog.credits'));
 			page = "credits.html";
 			break;
 
 		case "downloads":
-			$("#learnmore-title").html("DOWNLOADS");
+			$("#learnmore-title").html(t('dialog.downloads'));
 			page = "downloads.html";
 			break;
 
 		case "context-learn-more":
-			$("#learnmore-title").html("地図のコンテキストと背景について");
+			$("#learnmore-title").html(t('dialog.context'));
 			page = "context.html";
 			break;
 	}
 	if (page) {
-		$("#learnmore #content").load("learnmore/" + page, function () {
+		var langPrefix = (window.getLang && window.getLang() === 'en') ? 'en/' : '';
+		$("#learnmore #content").load("learnmore/" + langPrefix + page, function () {
 			$("#learnmore").show().css("margin-top", ($("#wrapper").height() / 2 - $("#learnmore").height() / 2));
 		});
 		$("#mask").show();
@@ -563,7 +564,7 @@ function saveSettingsToFile() {
 		console.log("Settings saved to file: " + fileName + " (v2-octet-stream)");
 	} catch (error) {
 		console.error("Error saving settings:", error);
-		alert("設定の保存中にエラーが発生しました: " + error.message);
+		alert(t('msg.saveError') + error.message);
 	}
 }
 
@@ -580,26 +581,27 @@ function loadSettingsFromFile(file) {
 
 			// バリデーション
 			if (!settings.settings) {
-				throw new Error("無効な設定ファイル形式です");
+				throw new Error(t('msg.invalidFile'));
 			}
 
 			// 確認ダイアログ
-			var timestamp = settings.timestamp ? new Date(settings.timestamp).toLocaleString('ja-JP') : '不明';
-			if (!confirm("設定を読み込みますか？\n\n保存日時: " + timestamp + "\n\n現在の設定は上書きされます。")) {
+			var locale = (window.getLang && window.getLang() === 'en') ? 'en-US' : 'ja-JP';
+			var timestamp = settings.timestamp ? new Date(settings.timestamp).toLocaleString(locale) : t('msg.unknown');
+			if (!confirm(t('msg.loadConfirm', { timestamp: timestamp }))) {
 				return;
 			}
 
 			applySettings(settings);
 			console.log("Settings loaded successfully");
-			alert("設定を読み込みました");
+			alert(t('msg.loadSuccess'));
 
 		} catch (error) {
 			console.error("Error loading settings:", error);
-			alert("設定の読み込み中にエラーが発生しました: " + error.message);
+			alert(t('msg.loadError') + error.message);
 		}
 	};
 	reader.onerror = function () {
-		alert("ファイルの読み込みに失敗しました");
+		alert(t('msg.loadFailed'));
 	};
 	reader.readAsText(file);
 }

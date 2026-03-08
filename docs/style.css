@@ -66,6 +66,7 @@ a img{ border: none }
 #header p {
 	margin: 0;
 	text-align: right;
+	white-space: nowrap;
 }
 #header p a{
 	color: white;
